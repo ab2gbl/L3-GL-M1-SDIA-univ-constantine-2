@@ -1,0 +1,174 @@
+a. This query selects mountains located in Algeria and retrieves their elevations.
+b. The "a" in the pattern "?m a dbo:Mountain;" corresponds to the "rdf:type" property in the RDF triple pattern. It's being substituted with the URI of the type "dbo:Mountain."
+c. The "dbo:" prefix corresponds to the DBpedia ontology, and the "dbr:" prefix corresponds to DBpedia resources.
+d. The execution of the query will retrieve the mountains located in Algeria and their elevations. The result obtained should match the expected mountains' elevations.
+
+To obtain the URIs and altitudes of the ten highest peaks in Algeria, you can use the following query:
+
+SELECT ?m ?a 
+WHERE {
+ ?m a dbo:Mountain;
+ dbo:locatedInArea dbr:Algeria;
+ dbo:elevation ?a.
+}
+ORDER BY DESC(?a)
+LIMIT 10
+To also get the names of the peaks along with their altitudes, you can use the following query:
+SELECT ?m ?a ?label
+WHERE {
+ ?m a dbo:Mountain;
+ dbo:locatedInArea dbr:Algeria;
+ rdfs:label ?label;
+ dbo:elevation ?a.
+ FILTER (lang(?label) = 'en')
+}
+ORDER BY DESC(?a)
+LIMIT 10
+a. This query retrieves only the peaks with English labels. The number of different peaks obtained depends on how many have English labels.
+b. To get the English names only, modify the last query by removing the selection of the label in a specific language.
+
+To obtain the altitude and English names of all Algerian peaks over 2000m in descending order, you can use the following query:
+SELECT ?m ?a ?label
+WHERE {
+ ?m a dbo:Mountain;
+ dbo:locatedInArea dbr:Algeria;
+ rdfs:label ?label;
+ dbo:elevation ?a.
+ FILTER (?a > 2000)
+ FILTER (lang(?label) = 'en')
+}
+ORDER BY DESC(?a)
+b. To get the number of peaks found, you can use the following query:
+
+SELECT (COUNT(?m) as ?count)
+WHERE {
+ ?m a dbo:Mountain;
+ dbo:locatedInArea dbr:Algeria;
+ dbo:elevation ?a.
+ FILTER (?a > 2000)
+}
+To retrieve the URIs, altitudes, English names, and Arabic names of peaks over 2000m, sorted by altitude in descending order, you can use the following query:
+SELECT ?m ?a ?en_label ?ar_label
+WHERE {
+ ?m a dbo:Mountain;
+ dbo:locatedInArea dbr:Algeria;
+ rdfs:label ?en_label;
+ dbo:elevation ?a.
+ OPTIONAL {
+  ?m rdfs:label ?ar_label.
+  FILTER (lang(?ar_label) = 'ar')
+ }
+ FILTER (?a > 2000) 
+ FILTER (lang(?en_label) = 'en')
+}
+ORDER BY DESC(?a)
+
+SELECT ?m ?a ?en_label ?ru_label
+WHERE {
+ ?m a dbo:Mountain;
+ dbo:locatedInArea dbr:Algeria;
+ rdfs:label ?en_label;
+ dbo:elevation ?a.
+ OPTIONAL {
+  ?m rdfs:label ?ru_label.
+  FILTER (lang(?ru_label) = 'ru')
+ }
+ FILTER (?a > 2000) 
+ FILTER (lang(?en_label) = 'en')
+}
+ORDER BY DESC(?a)
+
+
+
+
+
+
+
+
+
+
+exo 2:
+
+
+SELECT ?p
+WHERE {
+  <http://dbpedia.org/resource/Assia_Djebar> ?p ?o.
+  FILTER (strstarts(str(?p), "http://dbpedia.org/ontology"))
+}
+ORDER BY asc(?p)
+You can also try this query with and without DISTINCT to check the difference in results.
+
+The following SPARQL query retrieves the date of birth and the place of birth of the writer:
+SELECT ?birthdate ?birthplace
+WHERE {
+  <http://dbpedia.org/resource/Assia_Djebar> dbo:birthDate ?birthdate;
+                                            dbo:birthPlace ?birthplace.
+}
+The following ASK query helps determine whether Assia Djebar is deceased or not:
+ASK
+WHERE {
+  <http://dbpedia.org/resource/Assia_Djebar> dbo:deathDate ?deathdate.
+}
+This query retrieves the type of the resource Assia Djebar and determines the most appropriate type from the DBpedia ontology:
+SELECT ?type
+WHERE {
+  <http://dbpedia.org/resource/Assia_Djebar> a ?type.
+  FILTER (strstarts(str(?type), "http://dbpedia.org/ontology"))
+}
+Based on the types returned, the most appropriate type from the DBpedia ontology for indicating that Assia Djebar is a writer could be dbo:Writer.
+
+To determine the number of writers in DBpedia, you can use the following query:
+SELECT (COUNT(?person) as ?count)
+WHERE {
+  ?person a dbo:Writer.
+}
+The number of writers found in DBpedia will be based on the count obtained from this query.
+
+To refine the previous query to retrieve only the writers born in Algeria, you can use the following query:
+SELECT (COUNT(?person) as ?count)
+WHERE {
+  ?person a dbo:Writer;
+          dbo:birthPlace <http://dbpedia.org/resource/Algeria>.
+}
+This will give you the count of writers born in Algeria in DBpedia.
+
+copy
+i need it with dbr:
+
+Certainly! If you want to retrieve the information using the resource identifier prefix "dbr" instead of the full URLs, here are the modified queries:
+
+List of properties of the writer Assia Djebar:
+SELECT ?p
+WHERE {
+  dbr:Assia_Djebar ?p ?o.
+  FILTER (strstarts(str(?p), "http://dbpedia.org/ontology"))
+}
+ORDER BY asc(?p)
+Date of birth and place of birth of the writer:
+SELECT ?birthdate ?birthplace
+WHERE {
+  dbr:Assia_Djebar dbo:birthDate ?birthdate;
+                  dbo:birthPlace ?birthplace.
+}
+ASK query to determine if Assia Djebar is deceased:
+ASK
+WHERE {
+  dbr:Assia_Djebar dbo:deathDate ?deathdate.
+}
+Query to find the type of the resource Assia Djebar within the DBpedia ontology:
+SELECT ?type
+WHERE {
+  dbr:Assia_Djebar a ?type.
+  FILTER (strstarts(str(?type), "http://dbpedia.org/ontology"))
+}
+Query to determine the number of writers in DBpedia:
+SELECT (COUNT(?person) as ?count)
+WHERE {
+  ?person a dbo:Writer.
+}
+Query to find the number of writers born in Algeria:
+SELECT (COUNT(?person) as ?count)
+WHERE {
+  ?person a dbo:Writer;
+          dbo:birthPlace dbr:Algeria.
+}

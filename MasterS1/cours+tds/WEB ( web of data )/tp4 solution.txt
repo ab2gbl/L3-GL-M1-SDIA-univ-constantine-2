@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<rdf:RDF
+xmlns:dbo="http://dbpedia.org/ontology/"
+xmlns:dbpedia="http://dbpedia.org/resource/"
+xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+    <rdf:Description rdf:about="dbpedia:Malek_Bennabi">
+
+        <dbpedia:influencedBy rdf:resource="dbpedia:Georges_Sorel"/>
+       
+        <foaf:name>
+            Malek Bennabi
+        </foaf:name>
+
+        <dbpedia:notableideas>
+            Colonizability
+        </dbpedia:notableideas>
+
+        <dbo:deathDate>
+            1973-10-31
+        </dbo:deathDate>
+
+        <dbo:birthDate>
+            1905-01-01
+        </dbo:birthDate>
+
+        <dbo:abstract>
+            Malek Bennabi(1905-1973) was an A(...)
+        </dbo:abstract>
+
+        <rdf:type rdf:resource='dbo:Philosopher'/>
+
+        <dbo:birthPlace rdf:resource='dbpedia:Constantine_Algeria'/>
+        
+    </rdf:Description>
+
+    <rdf:Description rdf:about="dbpedia:Constantine_Algeria">
+
+        <rdf:type rdf:resource="dbo:City"/>
+
+        <foaf:name>
+            Contantine,Algeria
+        </foaf:name>
+
+    </rdf:Description>
+
+</rdf:RDF>
+
+@prefix rdf <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix dbo <http://dbpedia.org/ontology/>.
+@prefix dbpedia <http://dbpedia.org/resource/>.
+@prefix foaf <http://xmlns.com/foaf/0.1/>.
+
+
+<dbpedia:Malek_Bennabi>
+    a dbo:Philosopher
+    foaf:name "Malek Bennabi"
+    dbpedia.notableideas "Colonizability"
+    dbo:abstract "Malek...."
+    dbo:deathDate "1973-10-31"
+    dbo:birthDate "1905-01-01"
+    dbpedia:influencedBy <dbpedia:Georges_Sorel>
+    dbo:birthPlace <dbpedia:Constantine_Algeria>
+        a dbo:City
+        foaf:name "Constantine Algeria"
+
+
+
+
+BASE <http://example.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+
+GRAPH <https://dbpedia.org/resource/Sasuke_Uchiha> 
+{
+    <Sasuke_Uchiha>
+                   dbo:wikiPageWikiLink dbr:Naruto_Uzumaki ;
+                   rdf:type owl:Thing;
+                   foaf:name "Sasuke Uchiha"@en.
+}
+
+GRAPH <https://dbpedia.org/resource/Naruto_Uzumaki> {
+    <Naruto_Uzumaki>
+                    dbo:abstract "Naruto Uzumaki (Jap...";
+                    dbo:firstAppearance "Naruto chapter 1: Uzumaki Naruto! (1999)";
+                    dbo:series dbr:Naruto;
+                    dbo:wikiPageWikiLink dbr:Sasuke_Uchiha.
+}
+
+GRAPH <https://dbpedia.org/page/Itachi_Uchiha> {
+    <Itachi_Uchiha>
+                   foaf:name "Itaci Uchiha"@en;
+                   dbo:wikiPageWikiLink dbr:Naruto_Uzumaki , dbr:Sasuke_Uchiha ;
+                   rdf:type owl:Thing.
+}
+
+
+
+EXO4 :
+Q1) no elements detected.
+
+Q2)for one prefix we use vocab for multiple we use prefix :
+<body vocab ="schema.org" prefix="schema:schema.org">
+
+Q3)<body vocab ="schema.org" typeof="Book">
+
+Q4)VISIT HTML CODE and use "validator.schema.org" to validate
