@@ -1,0 +1,35 @@
+CREATE DATABASE banque;
+use banque;
+CREATE TABLE `compte` (
+  `id` int(11) NOT NULL,
+  `nom` varchar(50) DEFAULT NULL,
+  `prenom` varchar(50) DEFAULT NULL,
+  `solde` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ;
+
+INSERT INTO compte VALUES (1,'benali','cherif',1510),(2,'amara','ahmed',3190),(3,'zitouni','ali',1000),(4,'abdou','Med',4500),(5,'amiri','ali',500),(6,'zenati','Med',4500),(7,'zouaoui','ali',500),(10,'dziri','ali',3500),(11,'mohcene','Med',3000),(12,'soltani','sarah',1000),(13,'maouche','anes',1500),(14,'zenad','mohcene',1000),(15,'Client A','Client A',500),(16,'Client B','Client B',400);
+
+
+
+
+
+
+set DELIMITER $$
+CREATE PROCEDURE virement(IN compte1 INT, IN compte2 INT, IN montant int, OUT msg varchar(40) )
+BEGIN
+DECLARE x INT;
+ if (select solde from compte where id = compte1) > montant then
+		update compte set solde = solde - montant 
+		where id = compte1;
+		
+        update compte set solde = solde + montant 
+		where id = compte2;
+        set msg ='Virement effectue';
+    else
+		  set msg ='ECHEC virement';
+     END IF;   
+END $$
+
+call virement(1, 2, 50, @x);
+select @x;

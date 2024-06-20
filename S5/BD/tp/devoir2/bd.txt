@@ -1,0 +1,178 @@
+CREATE DATABASE tourismetp6;
+use tourismetp6;
+CREATE TABLE bus (
+  ligne int(11) NOT NULL,
+  horaire varchar(10) NOT NULL,
+  PRIMARY KEY (`ligne`,`horaire`)
+) ;
+
+CREATE TABLE sitetouristique (
+  nom varchar(50) NOT NULL,
+  anciennete date DEFAULT NULL,
+  PRIMARY KEY (nom)
+) ;
+
+CREATE TABLE hotel (
+  nom varchar(50) NOT NULL,
+  adresse varchar(50) DEFAULT NULL,
+  codepostal varchar(45) DEFAULT NULL,
+  ville varchar(45) DEFAULT NULL,
+  etoiles int(11) DEFAULT NULL,
+  NB_Chambres int(11) DEFAULT NULL,
+  site varchar(50) DEFAULT NULL,
+  PRIMARY KEY (nom),
+  CONSTRAINT site FOREIGN KEY (site) REFERENCES sitetouristique (nom)
+) ;
+
+
+CREATE TABLE dessert_hotel (
+ligne_bus int(11) NOT NULL,
+  nomhotel varchar(50) NOT NULL,
+  horaire_bus varchar(10) NOT NULL,
+  PRIMARY KEY (ligne_bus, nomhotel,horaire_bus),
+  CONSTRAINT bus_info FOREIGN KEY (ligne_bus, horaire_bus) REFERENCES bus (ligne, horaire),
+  CONSTRAINT hotel_info FOREIGN KEY (nomhotel) REFERENCES hotel (nom)
+) ;
+CREATE TABLE visiteur (
+  nomvisiteur varchar(50) NOT NULL,
+  adresse varchar(50) DEFAULT NULL,
+  tel varchar(10) DEFAULT NULL,
+  PRIMARY KEY (nomvisiteur)
+) ;
+CREATE TABLE reserver_hotel (
+  Visiteur varchar(50) NOT NULL,
+  hotel varchar(50) NOT NULL,
+  date_res date NOT NULL,
+  NB_jours int(11) DEFAULT NULL,
+  PRIMARY KEY (Visiteur,hotel,date_res),
+  CONSTRAINT hotel_infos FOREIGN KEY (hotel) REFERENCES hotel (nom),
+  CONSTRAINT visiteur_infos FOREIGN KEY (Visiteur) REFERENCES visiteur (nomvisiteur)
+) ;
+CREATE TABLE type_cuisine (
+  label varchar(50) NOT NULL,
+  PRIMARY KEY (label)
+) ;
+
+CREATE TABLE restaurant (
+  nom varchar(50) NOT NULL,
+  tel varchar(10) DEFAULT NULL,
+  type_cuisine varchar(50) DEFAULT NULL,
+  hotel varchar(50) DEFAULT NULL,
+  site varchar(50) DEFAULT NULL,
+  PRIMARY KEY (nom),
+  CONSTRAINT nhotel FOREIGN KEY (hotel) REFERENCES hotel (nom),
+  CONSTRAINT type_cuisine FOREIGN KEY (type_cuisine) REFERENCES type_cuisine (label)
+) ;
+
+
+
+
+drop PROCEDURE Consulter_hotel;
+set DELIMITER $$	
+CREATE PROCEDURE Consulter_hotel(in site varchar(50),in type_cuisine varchar(50),in date_visite date)
+BEGIN
+
+declare nm varchar(50);
+declare nc int;
+declare x int;
+declare y int;
+declare n int default 0;
+declare i int default 0;
+select count(*) from hotel into n; 
+while i<n do
+	select h.nom,h.NB_Chambres from hotel h ,reserver_hotel rh,restaurant r,type_cuisine tc
+	where h.nom=rh.hotel
+	and h.nom=r.hotel
+	and r.type_cuisine=tc.label
+	and h.site =site
+	and label=type_cuisine limit i,1 into nm,nc;
+    set x=(select count(*) from tourismetp6.reserver_hotel where hotel=nm and date_res<date_visite);
+	set y=(select count(*) from tourismetp6.reserver_hotel where hotel=nm and (date_add(date_res,interval NB_jours day))<date_visite);
+    if x-y<nc then
+		select nm;
+	end if;
+    set i=i+1;
+end while;
+END $$
+set DELIMITER ;
+call Consulter_hotel('sitetest','type1','2022-1-5' );
+
+
+
+
+CREATE PROCEDURE gerer_reserver_hotel(in visiteur varchar(50),in hotel varchar(50),in date_debut date,in date_fin date)
+BEGIN
+select 'hi';
+-- declare vs varchar(50);
+-- declare h varchar(50);
+/*declare dr date;
+declare b int default 0;
+declare n int default 0;
+declare i int default 0;
+select count(*) from hotel into n; 
+while i<n do
+	select visiteur,hotel,date_res from tourismetp6.reserver_hotel limit i,1 ;-- into vs,h,dr;
+    if(vs= visiteur)then
+		set b=1;
+    end if;
+    select b;
+    set i=i+1;*/
+-- end while;
+End $$
+set DELIMITER ;
+call gerer_reserver_hotel('v1','test1','2022-1-1','2022-1-1');
+
+
+
+
+
+
+
+
+declare h varchar(50);
+	declare n int default 0;
+    declare i int default 0;
+    declare ct int default 0;
+    declare b int default 0;
+    select count(*) from tourismetp6.dessert_hotel into n; 
+	while i<n do
+		select nomhotel from tourismetp6.dessert_hotel where ligne_bus=ligne  limit i,1 into h;
+        select count(*) from tourismetp6.dessert_hotel where ligne_bus!=ligne and nomhotel=h into ct;
+        if(ct=0) then 
+			set b=1;
+		end if;
+        set i=i+1;
+    end while;
+    if(b=0) then
+		DELETE FROM tourismetp6.dessert_hotel where ligne_bus=ligne;
+        DELETE FROM tourismetp6.bus b where b.ligne=ligne;
+	end if;
+
+
+
+
+drop PROCEDURE if exists maj_bus;
+set DELIMITER $$
+CREATE PROCEDURE maj_bus(in ligne int)
+begin
+	declare h varchar(50);
+	declare n int default 0;
+    declare i int default 0;
+    declare ct int default 0;
+    declare b int default 0;
+    select count(*) from tourismetp6.dessert_hotel into n; 
+	while i<n do
+		select nomhotel from tourismetp6.dessert_hotel where ligne_bus=ligne  limit i,1 into h;
+        select count(*) from tourismetp6.dessert_hotel where ligne_bus!=ligne and nomhotel=h into ct;
+        if(ct=0) then 
+			set b=1;
+		end if;
+        set i=i+1;
+    end while;
+    if(b=0) then
+		DELETE FROM tourismetp6.dessert_hotel where ligne_bus=ligne;
+        DELETE FROM tourismetp6.bus b where b.ligne=ligne;
+	end if;
+end $$
+set DELIMITER ;
+-- call maj_bus(3);
