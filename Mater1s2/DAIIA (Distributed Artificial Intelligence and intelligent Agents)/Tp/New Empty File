@@ -1,0 +1,4 @@
+export JADELIB=/home/kali/Desktop/Mater1s2/DAIIA/jade/lib/
+export CLASSPATH=$JADELIB/jade.jar:$JADELIB/jadeTools.jar:$JADELIB/http.jar:$JADELIB/commons-codec/commons-codec-1.3.jar:.
+java jade.Boot -gui
+

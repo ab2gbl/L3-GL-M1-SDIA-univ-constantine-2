@@ -1,0 +1,8 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/home/kali/Desktop/Mater1s2/DAIIA/JADE-all-4.6.0/jade/lib/jade.jar"
+    ]
+}

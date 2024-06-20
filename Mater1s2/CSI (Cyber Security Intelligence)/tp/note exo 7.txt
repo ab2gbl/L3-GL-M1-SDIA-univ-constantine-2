@@ -1,0 +1,2 @@
+3h --> 3*3600s = 10800 value possibles
+
