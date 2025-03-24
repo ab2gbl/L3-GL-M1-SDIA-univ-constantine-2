@@ -1,3 +1,0 @@
-src/Team 				execution console
-src/anim/Main				GUI with 1 team
-src/TeamAnim/TeamMain			app final
